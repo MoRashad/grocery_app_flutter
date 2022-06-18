@@ -14,6 +14,15 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  final TextEditingController _addressTextController =
+      TextEditingController(text: '');
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _addressTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
@@ -46,7 +55,7 @@ class _UserScreenState extends State<UserScreen> {
                                 fontWeight: FontWeight.w600),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                print('muanem');
+                                //print('muanem');
                               }),
                       ]),
                 ),
@@ -68,10 +77,12 @@ class _UserScreenState extends State<UserScreen> {
                   height: 20,
                 ),
                 _listTiles(
-                    title: 'address2',
+                    title: 'Address',
                     subtitle: 'mysubtitle',
                     icon: IconlyLight.profile,
-                    onpressed: () {},
+                    onpressed: () async {
+                      _showAddressDialog();
+                    },
                     color: color),
                 _listTiles(
                     title: 'Orders',
@@ -112,7 +123,9 @@ class _UserScreenState extends State<UserScreen> {
                 _listTiles(
                     title: 'Logout',
                     icon: IconlyBold.logout,
-                    onpressed: () {},
+                    onpressed: () {
+                      _showLogoutDialog();
+                    },
                     color: color),
               ],
             ),
@@ -120,6 +133,66 @@ class _UserScreenState extends State<UserScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _showLogoutDialog() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Image.asset(
+                  'assets/images/warning-sign.png',
+                  height: 20,
+                  width: 20,
+                  fit: BoxFit.fill,
+                ),
+                const SizedBox(width: 10),
+                const Text('Sign Out')
+              ],
+            ),
+            content: const Text('Do you want to sign out? '),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: TextWidget(
+                    text: 'Cancel', color: Colors.cyan, textsize: 18),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: TextWidget(text: 'Yes', color: Colors.red, textsize: 18),
+              )
+            ],
+          );
+        });
+  }
+
+  Future<void> _showAddressDialog() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('update'),
+            content: TextField(
+              onChanged: (value) {
+                //_addressTextController.text;
+                print(
+                    '_adressTextController.text ${_addressTextController.text}');
+              },
+              controller: _addressTextController,
+              maxLines: 5,
+              decoration: const InputDecoration(hintText: 'Your address'),
+            ),
+            actions: [
+              TextButton(onPressed: () {}, child: const Text('Update'))
+            ],
+          );
+        });
   }
 
   Widget _listTiles({
@@ -136,11 +209,10 @@ class _UserScreenState extends State<UserScreen> {
         textsize: 22,
         isTitle: true,
       ),
-      subtitle: TextWidget(
-          text: subtitle == null ? "" : subtitle, color: color, textsize: 18),
+      subtitle: TextWidget(text: subtitle ?? "", color: color, textsize: 18),
       leading: Icon(icon),
       trailing: const Icon(IconlyLight.arrowRight2),
-      onTap: onpressed(),
+      onTap: () => onpressed(),
     );
   }
 }
