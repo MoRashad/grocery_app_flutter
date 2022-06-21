@@ -1,7 +1,10 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:grocery_app/inner_screens/feed_screen.dart';
+import 'package:grocery_app/inner_screens/on_sale_screen.dart';
 import 'package:grocery_app/prvider/dark_theme_provider.dart';
+import 'package:grocery_app/services/global_mathods.dart';
 import 'package:grocery_app/services/utils.dart';
 import 'package:grocery_app/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 6),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  GlobalMethods.navigateTo(
+                      context: context, routeName: OnSaleScreen.routeName);
+                },
                 child: TextWidget(
                   text: 'View all',
                   color: Colors.blue,
@@ -110,7 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     isTitle: true,
                   ),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        GlobalMethods.navigateTo(
+                            context: context, routeName: FeedScreen.routeName);
+                      },
                       child: TextWidget(
                         text: 'Browse all',
                         color: Colors.blue,
@@ -122,8 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             //const FeedsWidget(),
             GridView.count(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
+              padding: EdgeInsets.zero,
               crossAxisSpacing: 10,
               mainAxisSpacing: 2,
               crossAxisCount: 2,
